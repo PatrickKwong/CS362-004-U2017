@@ -652,7 +652,7 @@ int adventurer_func(struct gameState *state)
 	int temphand[MAX_HAND];// moved above the if statement
 	int z = 0;// this is the counter for the temp hand
     
-	while(drawntreasure <= 2) // BUG added!! - Changed to < to <= that what it could end up drawing extra treasure.
+	while(drawntreasure < 2)
 	{
 		//if the deck is empty we need to shuffle discard and add to deck
 		if (state->deckCount[currentPlayer] <1)
@@ -692,7 +692,7 @@ int council_room_func(int handPos, struct gameState *state)
 	int currentPlayer = whoseTurn(state);	
 	
 	//+4 Cards
-	for (i = 1; i < 4; i++) // BUG added!!! = changed i=0 to i=1, which will result in 1 less card drawn.
+	for (i = 0; i < 4; i++)
 		drawCard(currentPlayer, state);
 
 	//+1 Buy
@@ -747,7 +747,7 @@ int smithy_func(int handPos, struct gameState *state)
 	int currentPlayer = whoseTurn(state);
 	
 	//+3 Cards
-	for (i = 0; i <= 3; i++) // BUG added!!! = changed < to <=, which will result in 1 more card drawn.
+	for (i = 0; i < 3; i++)
 		drawCard(currentPlayer, state);
 
 	//discard card from hand
@@ -765,7 +765,7 @@ int village_func(int handPos, struct gameState *state)
 	drawCard(currentPlayer, state);
 			
 	//+2 Actions
-	state->numActions = state->numActions + 22; // BUG added!!! = changed 2 to 22, which will result in +22 actions instead of just 2.
+	state->numActions = state->numActions + 2;
 			
 	//discard played card from hand
 	discardCard(handPos, currentPlayer, state, 0);
