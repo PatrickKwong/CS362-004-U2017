@@ -12,4 +12,10 @@ int getCost(int cardNumber);
 int cardEffect(int card, int choice1, int choice2, int choice3, 
 	       struct gameState *state, int handPos, int *bonus);
 
+// add prototypes for refactored card functions
+int adventurer_func(struct gameState *state);
+int council_room_func(int handPos, struct gameState *state);
+int remodel_func(int choice1, int choice2, int handPos, struct gameState *state);
+int smithy_func(int handPos, struct gameState *state);
+int village_func(int handPos, struct gameState *state);
 #endif
