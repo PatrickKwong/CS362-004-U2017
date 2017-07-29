@@ -48,10 +48,10 @@ int main() {
     gainCard(adventurer, &G, 2, 0); // add adventurer card to player 1's hand
     
     memcpy(&prevG, &G, sizeof(struct gameState)); //create clone of game state to run tests on
-    adventurer_func(&G);
     
     // get hand counts
     prevCount = prevG.handCount[0];
+    adventurer_func(&G);
     afterCount = G.handCount[0];
 
     // check if correct number of cards after refactored adventurer card

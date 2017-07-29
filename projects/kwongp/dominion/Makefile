@@ -1,5 +1,32 @@
 CFLAGS = -Wall -fpic -coverage -lm
 
+randomtestadventurer: randomtestadventurer.c dominion.o rngs.o
+	gcc -o randomtestadventurer randomtestadventurer.c dominion.o rngs.o $(CFLAGS)
+	echo "${\n}randomtestadventurer.c:" > randomtestadventurer.out
+	./randomtestadventurer >> randomtestadventurer.out
+	gcov randomtestadventurer.c -b >> randomtestadventurer.out
+	cat randomtestadventurer.c.gcov >> randomtestadventurer.out
+	gcov dominion.c -b >> randomtestadventurer.out
+	cat dominion.c.gcov >> randomtestadventurer.out
+
+randomtestcard1: randomtestcard1.c dominion.o rngs.o
+	gcc -o randomtestcard1 randomtestcard1.c dominion.o rngs.o $(CFLAGS)
+	echo "${\n}randomtestcard1.c:" > randomtestcard1.out
+	./randomtestcard1 >> randomtestcard1.out
+	gcov randomtestcard1.c -b >> randomtestcard1.out
+	cat randomtestcard1.c.gcov >> randomtestcard1.out
+	gcov dominion.c -b >> randomtestcard1.out
+	cat dominion.c.gcov >> randomtestcard1.out
+
+randomtestcard2: randomtestcard2.c dominion.o rngs.o
+	gcc -o randomtestcard2 randomtestcard2.c dominion.o rngs.o $(CFLAGS)
+	echo "${\n}randomtestcard2.c:" > randomtestcard2.out
+	./randomtestcard2 >> randomtestcard2.out
+	gcov randomtestcard2.c -b >> randomtestcard2.out
+	cat randomtestcard2.c.gcov >> randomtestcard2.out
+	gcov dominion.c -b >> randomtestcard2.out
+	cat dominion.c.gcov >> randomtestcard2.out
+
 rngs.o: rngs.h rngs.c
 	gcc -c rngs.c -g  $(CFLAGS)
 
