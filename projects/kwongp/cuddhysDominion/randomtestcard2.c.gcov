@@ -1,0 +1,401 @@
+        -:    0:Source:randomtestcard2.c
+        -:    0:Graph:randomtestcard2.gcno
+        -:    0:Data:randomtestcard2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/* -----------------------------------------------------------------------
+        -:    2: * CS362-004 Summer 2017 Assignment 5
+        -:    3: * randomtestcard2.c
+        -:    4: * 
+        -:    5: * Patrick Kwong
+        -:    6: * kwongp@oregonstate.edu
+        -:    7: *
+        -:    8: * Random test generator for Village using teammate(cuddhys)'s dominion code
+        -:    9: * - player that plays Village draws 1 card
+        -:   10: * - player gets two extra actions
+        -:   11: *
+        -:   12: * Used provided cardtest4.c, dominion.c, and testUpdateCoins.c provided code
+        -:   13: * -----------------------------------------------------------------------
+        -:   14: * Include the following lines in the makefile:
+        -:   15: *
+        -:   16: * randomtestcard2: randomtestcard2.c dominion.o rngs.o
+        -:   17: *      gcc -o randomtestcard2 -g randomtestcard2.c dominion.o rngs.o $(CFLAGS)
+        -:   18: */
+        -:   19:
+        -:   20:#include "dominion.h"
+        -:   21:#include "dominion_helpers.h"
+        -:   22:#include <string.h>
+        -:   23:#include <stdio.h>
+        -:   24:#include <assert.h>
+        -:   25:#include "rngs.h"
+        -:   26:#include <stdlib.h>
+        -:   27:#include <time.h>
+        -:   28:#include <math.h>
+        -:   29:#include <stdbool.h>
+        -:   30:
+        -:   31:#define TEST_RUNS 1000
+        -:   32:
+        -:   33:// prototype
+        -:   34:int villageFunc(int currentPlayer, struct gameState *state, int handPos);
+        -:   35:
+function main called 1 returned 100% blocks executed 84%
+        1:   36:int main() {
+        -:   37:    int i, j, r, z;
+        -:   38:    int numPlayer;
+        1:   39:    int bugCount = 0;
+        1:   40:    int flag = 0; // flag for other player piles
+        -:   41:	struct gameState G, prevG;
+        1:   42:	int seed = 1000;
+        1:   43:	srand(time(NULL));
+call    0 returned 100%
+call    1 returned 100%
+        -:   44:	int k[10]; // for kingdom cards
+        -:   45:	int numKingdomCards;
+        -:   46:	bool haveCard;
+        -:   47:	int numDraw;
+        1:   48:	int pass = 0; // track the number of passes
+        1:   49:	int fail = 0; // track the number of fails
+        -:   50:
+        1:   51:	printf("-------------------------------------------\n");		
+call    0 returned 100%
+        1:   52:	printf(" Testing Random Test Generator for Village\n");
+call    0 returned 100%
+        1:   53:	printf("-------------------------------------------\n");	
+call    0 returned 100%
+        -:   54:	
+     1001:   55:		for(z = 1; z <= TEST_RUNS; z++) // test for loop
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+        -:   56:	{
+        -:   57:		// random kingdom cards set (9 random with Village card)
+     1000:   58:		numKingdomCards = 0;
+    15297:   59:		while(numKingdomCards < 10)
+branch  0 taken 93%
+branch  1 taken 7% (fallthrough)
+        -:   60:		{
+    13297:   61:			haveCard = false;
+    13297:   62:			r = (rand() % 20 + 7); // gets a random kingdom card
+call    0 returned 100%
+        -:   63:			
+        -:   64:			// check if already have card in kingdom set k
+    80280:   65:			for(i = 0; i < numKingdomCards; i++)
+branch  0 taken 83%
+branch  1 taken 17% (fallthrough)
+    66983:   66:				if(k[i] == r)
+branch  0 taken 5% (fallthrough)
+branch  1 taken 95%
+     3297:   67:					haveCard = true;
+        -:   68:			
+        -:   69:			// if we don't have it, add it to k set and increment the numKingdomCards
+    13297:   70:			if(!haveCard)
+branch  0 taken 75% (fallthrough)
+branch  1 taken 25%
+        -:   71:			{
+    10000:   72:				k[numKingdomCards] = r;
+    10000:   73:				numKingdomCards++;
+        -:   74:			}
+        -:   75:		}
+        -:   76:		// now with random set, we have to make sure Village card is in the kingdom pile
+        -:   77:		// if not we'll randomly replace one of the 10 kindgom cards with an Village.
+     1000:   78:		haveCard = false;
+        -:   79:		// check 10 kingdom pile for Village
+    11000:   80:		for(i = 0; i < 10; i++)
+branch  0 taken 91%
+branch  1 taken 9% (fallthrough)
+        -:   81:		{
+    10000:   82:			if(k[i] == village)
+branch  0 taken 5% (fallthrough)
+branch  1 taken 95%
+        -:   83:			{
+      499:   84:				haveCard = true;
+        -:   85:			}
+        -:   86:		}
+        -:   87:		// no Village found, have to randomly add it.
+     1000:   88:		if(!haveCard)
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        -:   89:		{
+      501:   90:			r = (rand() % 10); // random position
+call    0 returned 100%
+      501:   91:			k[r] = village;
+        -:   92:		}
+        -:   93:		
+        -:   94:		// random number of players from 2 to 5
+     1000:   95:		numPlayer = ((rand() % 3) + 2);
+call    0 returned 100%
+        -:   96:		
+     1000:   97:		printf("--------------------------------\n");
+call    0 returned 100%
+     1000:   98:		printf(" Starting Test #%d for Village\n", z);
+call    0 returned 100%
+     1000:   99:		printf("--------------------------------\n");
+call    0 returned 100%
+        -:  100:		
+     1000:  101:		memset(&G, 23, sizeof(struct gameState));   // clear the game state
+     1000:  102:		initializeGame(numPlayer, k, seed, &G); // initialize a new game
+call    0 returned 100%
+        -:  103:		
+        -:  104:		// set random deck count for each player
+     4007:  105:		for(i = 0; i < numPlayer; i++)
+branch  0 taken 75%
+branch  1 taken 25% (fallthrough)
+     3007:  106:			G.deckCount[i] = (rand() % (MAX_DECK/numPlayer));
+call    0 returned 100%
+        -:  107:		
+        -:  108:		// fill each players' decks with random cards
+     4007:  109:		for(i = 0; i < numPlayer; i++)
+branch  0 taken 75%
+branch  1 taken 25% (fallthrough)
+        -:  110:		{
+   250726:  111:			for(j = 0; j < G.deckCount[i]; j++) 
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+        -:  112:			{
+   247719:  113:				r = rand() % 3;
+call    0 returned 100%
+   247719:  114:				switch(r) 
+branch  0 taken 33%
+branch  1 taken 33%
+branch  2 taken 33%
+branch  3 taken 0%
+        -:  115:				{
+    82374:  116:					case 0: G.deck[i][j] = (rand() % 4); // victory card 
+call    0 returned 100%
+    82374:  117:						break;
+    82478:  118:					case 1: G.deck[i][j] = (rand() % 3) + 4; // treasuer card 
+call    0 returned 100%
+    82478:  119:						break;
+    82867:  120:					case 2: G.deck[i][j] = k[(rand() % 10)]; // kingdom card 
+call    0 returned 100%
+    82867:  121:						break;
+        -:  122:				}
+        -:  123:			}
+        -:  124:		}
+        -:  125:		
+        -:  126:		// set random actions count for each player
+     1000:  127:		G.numActions = ((rand() % 50) + 1);
+call    0 returned 100%
+        -:  128:
+        -:  129:		// initialize counters
+     1000:  130:		bugCount = 0;
+        -:  131:		
+     1000:  132:		memcpy(&prevG, &G, sizeof(struct gameState)); //create clone of game state to run tests on
+        -:  133:		
+        -:  134:		// village_func(G.handCount[0], &G); // my previous code
+        -:  135:		// modifications to be able to use teammates's village function
+     1000:  136:		int currentPlayer = 0;
+     1000:  137:		villageFunc(currentPlayer, &G, G.handCount[0]);
+call    0 returned 100%
+        -:  138:		
+        -:  139:		/* tried cardEffect instead of my refactored function
+        -:  140:		int handPos, choice1, choice2, choice3, bonus;
+        -:  141:		choice1 = choice2 = choice3 = bonus = 0;
+        -:  142:		
+        -:  143:		// find hand position of village card
+        -:  144:		for(i = 0; i < G.handCount[0]; i++)
+        -:  145:		{
+        -:  146:			if(G.hand[0][i] == village)
+        -:  147:			{
+        -:  148:				handPos = i;
+        -:  149:			}
+        -:  150:		}
+        -:  151:		
+        -:  152:		cardEffect(village, choice1, choice2, choice3, &G, handPos, &bonus);
+        -:  153:		*/
+        -:  154:		// printf("Deck Count: %d\n", G.deckCount[0]);
+        -:  155:		/* check that deck, discard, hand contents are random
+        -:  156:		printf("Deck Contents\n");
+        -:  157:		for(i = 0; i < G.deckCount[0]; i++)
+        -:  158:			printf("Position %d, Card: %d\n", i, G.deck[0][i]);
+        -:  159:		
+        -:  160:		printf("Discard Contents\n");
+        -:  161:		for(i = 0; i < G.discardCount[0]; i++)
+        -:  162:			printf("Position %d, Card: %d\n", i, G.discard[0][i]);
+        -:  163:
+        -:  164:		printf("Hand Contents\n");
+        -:  165:		for(i = 0; i < G.handCount[0]; i++)
+        -:  166:			printf("Position %d, Card: %d\n", i, G.hand[0][i]);
+        -:  167:		*/
+        -:  168:		
+     1000:  169:		printf("Deck Count before Village: %d\n", prevG.deckCount[0]);
+call    0 returned 100%
+     1000:  170:		printf("Deck Count after Village: %d\n", G.deckCount[0]);
+call    0 returned 100%
+        -:  171:		
+        -:  172:		// if there are less than 1 cards, village can only draw what is available
+        -:  173:		// figure out how much should be drawn
+     1000:  174:		numDraw = 1;
+        -:  175:		
+     1000:  176:		if (prevG.deckCount[0] < 1)		
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+        8:  177:			numDraw = prevG.deckCount[0] - G.deckCount[0];
+        -:  178:		
+        -:  179:
+        -:  180:		// check if hand count correct after Village
+     1000:  181:		printf("\nChecking hand count is correct after using refactored Village.\n");
+call    0 returned 100%
+     1000:  182:		printf("Previous hand count: %d cards, After Village: %d cards\n", prevG.handCount[0], G.handCount[0]);
+call    0 returned 100%
+     1000:  183:		printf("Expected hand count after using Village is %d.\n", prevG.handCount[0] - 1 + numDraw);
+call    0 returned 100%
+     1000:  184:		if(G.handCount[0] == prevG.handCount[0] -1 + numDraw){
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+     1000:  185:			printf("Great! Ended with the correct number of cards in hand after Village.\n");
+call    0 returned 100%
+        -:  186:		}
+        -:  187:		else
+        -:  188:		{
+    #####:  189:			printf("Bug!!! Ended with the incorrect number of cards in hand after Village.\n");
+call    0 never executed
+    #####:  190:			bugCount++;
+        -:  191:		}
+        -:  192:
+        -:  193:		// check if Village drew the correct cards from deck
+     1000:  194:		printf("\nChecking if refactored Village card drew enough cards to hand.\n");
+call    0 returned 100%
+     1000:  195:		printf("Previous deck count: %d cards, After Village: %d cards\n", prevG.deckCount[0], G.deckCount[0]);
+call    0 returned 100%
+     1000:  196:		printf("Village drew: %d card. Expected to draw 1 card\n", prevG.deckCount[0] - G.deckCount[0]);
+call    0 returned 100%
+     1000:  197:		if((prevG.deckCount[0] - G.deckCount[0]) != numDraw){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:  198:			printf("Bug!!! Village didn't draw correct nunmber of cards from the deck.\n");
+call    0 never executed
+    #####:  199:			bugCount++;
+        -:  200:		}
+        -:  201:		else
+     1000:  202:			printf("Great! Village drew correct number of cards from deck.\n");
+call    0 returned 100%
+        -:  203:
+        -:  204:		// check if Village gave player +2 actions
+     1000:  205:		printf("\nChecking if refactored Village gave player +2 actions.\n");
+call    0 returned 100%
+     1000:  206:		printf("Previous actions count: %d, After Village: %d\n", prevG.numActions, G.numActions);
+call    0 returned 100%
+     1000:  207:		printf("Expected to get +2 actions after using Village.\n");
+call    0 returned 100%
+     1000:  208:		if((G.numActions - prevG.numActions) != 2){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:  209:			printf("Bug!!! Village didn't add +2 actions for player as it should.\n");
+call    0 never executed
+    #####:  210:			bugCount++;
+        -:  211:		}
+        -:  212:		else
+     1000:  213:			printf("Great! Village added +2 actions for player.\n");
+call    0 returned 100%
+        -:  214:
+        -:  215:		// check if Village altered other player's piles 
+     1000:  216:		printf("\nChecking if refactored Village altered other player's hand.\n");
+call    0 returned 100%
+     1000:  217:		if(prevG.handCount[1] != G.handCount[1]){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:  218:			printf("Bug!!! Village altered other player's hand pile.\n");
+call    0 never executed
+    #####:  219:			bugCount++;
+        -:  220:		}
+     1000:  221:		else if(prevG.deckCount[1] != G.deckCount[1]){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:  222:			printf("Bug!!! Village altered other player's deck pile.\n");
+call    0 never executed
+    #####:  223:			bugCount++;
+        -:  224:		}
+     1000:  225:		else if(prevG.discardCount[1] != G.discardCount[1]){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:  226:			printf("Bug!!! Village altered other player's discard pile.\n");
+call    0 never executed
+    #####:  227:			bugCount++;
+        -:  228:		}
+        -:  229:		else
+     1000:  230:			printf("Great! Village didn't altered other player's piles.\n");
+call    0 returned 100%
+        -:  231:		
+        -:  232:		// check if Village altered the victory and kingdom piles
+     1000:  233:		printf("\nChecking if refactored Village altered the Victory and Kingdom piles.\n");
+call    0 returned 100%
+     1000:  234:		int arraySize = sizeof(G.supplyCount) / sizeof(int);
+    28000:  235:		for(i = 0; i < arraySize; i++){
+branch  0 taken 96%
+branch  1 taken 4% (fallthrough)
+    27000:  236:			if(G.supplyCount[i] != prevG.supplyCount[i]){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:  237:				flag = 1;
+        -:  238:			}
+        -:  239:		}
+     1000:  240:		if(flag == 0)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+     1000:  241:			printf("Great! Village didn't alter the Victory and Kingdom piles.\n");
+call    0 returned 100%
+        -:  242:		else
+        -:  243:		{
+    #####:  244:			printf("Bug!!! Kingdom/Victory supplied have been altered!\n");
+call    0 never executed
+    #####:  245:			bugCount++;
+        -:  246:		}
+        -:  247:
+        -:  248:		// output the test results overall
+     1000:  249:		printf("------------------------------------------\n");
+call    0 returned 100%
+     1000:  250:		printf(" Test #%d results for Village\n", z);
+call    0 returned 100%
+     1000:  251:		printf("------------------------------------------\n");
+call    0 returned 100%
+        -:  252:
+     1000:  253:		if(bugCount == 0)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  254:		{
+     1000:  255:			printf("All tests passed for the Village!\n\n");
+call    0 returned 100%
+     1000:  256:			pass++;
+        -:  257:		}
+        -:  258:		else
+        -:  259:		{
+    #####:  260:			printf("Village failed for %d condition(s), check above for which ones.\n\n", bugCount);
+call    0 never executed
+    #####:  261:			fail++;
+        -:  262:		}
+        -:  263:		
+        -:  264:		/* checking deck, discard, hand contents
+        -:  265:		printf("Deck Contents\n");
+        -:  266:		for(i = 0; i < G.deckCount[0]; i++)
+        -:  267:			printf("Position %d, Card: %d\n", i, G.deck[0][i]);
+        -:  268:		
+        -:  269:		printf("Discard Contents\n");
+        -:  270:		for(i = 0; i < G.discardCount[0]; i++)
+        -:  271:			printf("Position %d, Card: %d\n", i, G.discard[0][i]);
+        -:  272:
+        -:  273:		printf("Hand Contents\n");
+        -:  274:		for(i = 0; i < G.handCount[0]; i++)
+        -:  275:			printf("Position %d, Card: %d\n", i, G.hand[0][i]);
+        -:  276:		*/
+        -:  277:		
+        -:  278:	}
+        -:  279:	
+        -:  280:	// output the final test results overall
+        1:  281:	printf("---------------------------------------------------\n");
+call    0 returned 100%
+        1:  282:	printf(" Final Testing results for Village\n");
+call    0 returned 100%
+        1:  283:	printf("---------------------------------------------------\n");
+call    0 returned 100%
+        -:  284:
+        1:  285:	if(fail == 0)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        1:  286:		printf("All tests passed for the Village! Amazing!\n\n");
+call    0 returned 100%
+        -:  287:	else
+    #####:  288:		printf("Village passed %d tests and failed %d tests, check above for which ones.\n\n", pass, fail);
+call    0 never executed
+        -:  289:		
+        1:  290:	return 0;
+        -:  291:}

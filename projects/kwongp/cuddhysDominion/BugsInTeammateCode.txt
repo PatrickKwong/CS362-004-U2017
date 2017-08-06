@@ -1,0 +1,173 @@
+CS362-004 Summer 2017 Assignment 5
+08/02/2017
+BugsInTeammateCode.txt
+Patrick Kwong
+kwongp@oregonstate.edu
+
+------------
+Bug Report 1
+------------
+
+Title: Adventurer Card Never Discarded After Playing it
+Code: dominion.c
+Code Author: Shawn Cuddhy (cuddhys)
+Author Email: cuddhys@oregonstate.edu
+
+Class: Minor Bug
+
+Date: 8/1/2017
+Tester: Patrick Kwong (kwongp)
+Tester Email: kwongp@oregonstate.edu
+
+Product: Dominion game
+Platform: Windows 7
+
+Is it reproducible: Yes
+
+---------------
+Bug Description
+---------------
+When a player plays the Adventurer card, the player never discards it from hand.
+
+------------------------------
+Steps to Produce/Reproduce Bug
+------------------------------
+1. Start a Dominion game
+2. Acquire a Adventurer card
+4. Examine and note the cards in hand
+3. Play the Adventurer card
+4. Examine and note the cards in hand to see Adventurer card is still in hand. 
+
+----------------
+Expected Results
+----------------
+The player should not still have Adventurer card in hand after playing Adventurer.
+
+
+Actual Results
+--------------
+The player has still has the Adventurer card in hand after playing Adventurer.
+
+
+Other Information
+-----------------
+This bug occurs in between lines 672 and 673 of dominion.c, within the adventurerFunc function. After the cards that have been drawn have been discarded. The adventurerFunc function is missing the call to the discardCard function to discard the used Adventurer card. 
+
+This bug was discovered with cardtest1.c and randomtestadventurer.c where the user ends up with 1 more card then expected and confirmed with test results and examination of code.
+
+
+-------------
+Bug Report #2
+-------------
+
+Title: Adventurer Card Discards Too More than Drawn
+Code: dominion.c
+Code Author: Shawn Cuddhy (cuddhys)
+Author Email: cuddhys@oregonstate.edu
+
+Class: Minor Bug
+
+Date: 8/1/2017
+Tester: Patrick Kwong (kwongp)
+Tester Email: kwongp@oregonstate.edu
+
+Product: Dominion game
+Platform: Windows 7
+
+Is it reproducible: Yes
+
+---------------
+Bug Description
+---------------
+When a player plays the Adventurer card, the player never discards it from hand.
+
+------------------------------
+Steps to Produce/Reproduce Bug
+------------------------------
+1. Start a Dominion game
+2. Acquire a Adventurer card
+4. Examine and note the number of cards in discard pile
+3. Play the Adventurer card
+4. Examine and note that the number of cards in discard pile is much more than drawn. 
+
+----------------
+Expected Results
+----------------
+The player should only have discarded the number of cards drawn while looking for the 2 treasure cards 
+and the Adventurer card after playing it.
+
+
+Actual Results
+--------------
+The player has still has the Adventurer card in hand and discard many more cards than those drawn while
+looking for the 2 treasure cards.
+
+
+Other Information
+-----------------
+This bug occurs on line 655 of dominion.c, within the adventurerFunc function. 
+	z = 99;
+
+The z is counter for the temp cards. However, it seem that right before counting begins on the cards drawn while lookign for the 2 treasure cards, the z is assigned a value of 99 before anything is even counted.
+
+This bug was discovered with cardtest1.c and randomtestadventurer.c where the user ends up with much more cards discarded than drawn while looking for 2 treasure cards. This was confirmed with test results and examination of code.
+
+
+-------------
+Bug Report #3
+-------------
+
+Title: Smithy Card Hangs Game
+Code: dominion.c
+Code Author: Shawn Cuddhy (cuddhys)
+Author Email: cuddhys@oregonstate.edu
+
+Class: Major Bug
+
+Date: 8/2/2017
+Tester: Patrick Kwong (kwongp)
+Tester Email: kwongp@oregonstate.edu
+
+Product: Dominion game
+Platform: Windows 7
+
+Is it reproducible: Yes
+
+---------------
+Bug Description
+---------------
+When a player plays the Smithy card, the game gets stuck and hangs.
+
+------------------------------
+Steps to Produce/Reproduce Bug
+------------------------------
+1. Start a Dominion game
+2. Acquire a Smithy card
+3. Play the Smithy card
+4. Note that game gets stuck and hangs. 
+
+----------------
+Expected Results
+----------------
+The player should have drawn 3 cards and discard the Smithy card after playing it.
+
+
+Actual Results
+--------------
+The player get stuck after playing the Smithy card.
+
+
+Other Information
+-----------------
+This bug occurs on line 681 of dominion.c, within the smithyFunc function. 
+    for (i = 0; i < 3; i)
+	{
+	  drawCard(currentPlayer, state)
+	}
+
+The bug is caused by the i at the end of the for loop not being incremented with ++. This bug causes the player to get stuck in a infinite loop continuing to run drawCard and never get out of the for loop becuase i is never going to be < 3.
+
+This bug was discovered with cardtest2.c and randomtestcard1.c when the bug caused my tests to hang forever. This bug was confirmed with an examination of code.
+
+
+
